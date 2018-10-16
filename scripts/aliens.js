@@ -15,7 +15,7 @@ const aliensMap = [
     '10','10','10','10','10','10','10','10','10','10','10',
 ];
 
-const alienSprites = { // Changer tous les noms avec dessus F2
+const alienSprites = { // Changer tous les noms avec dessus F2#
     40 : [
         { x:6 , y:3  , width:16 , height:16 },
         { x:6 , y:25 , width:16 , height:16 }
@@ -79,6 +79,12 @@ function animateAliens(){
             }
             else{
                 aliens[i].x += 12 * aliens[i].direction;
+            }
+
+            if(aliens[i].spriteIndex === 0){
+                aliens[i].spriteIndex = 1;
+            }else{
+                aliens[i].spriteIndex = 0;
             }
 
         aliens[i].x += 12 * aliens[i].direction;
