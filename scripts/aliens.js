@@ -81,11 +81,13 @@ function animateAliens(){
                 aliens[i].x += 12 * aliens[i].direction;
             }
 
-            if(aliens[i].spriteIndex === 0){
+            aliens[i].spriteIndex = (aliens[i].spriteIndex === 0) ? 1 : 0;
+
+            /*if(aliens[i].spriteIndex === 0){
                 aliens[i].spriteIndex = 1;
             }else{
                 aliens[i].spriteIndex = 0;
-            }
+            }*/
 
         aliens[i].x += 12 * aliens[i].direction;
         }
