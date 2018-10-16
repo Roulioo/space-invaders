@@ -2,7 +2,7 @@ const NB_ALIENS_PER_LINE = 11;
 
 ALIEN_SPACE_X = 35;
 ALIEN_SPACE_Y = 28;
-aliensTimer = 500;
+aliensTimer = 1000;
 
 
 let lastAlienMovement = 0; // instant t du dernier déplacement déplacement des aliens
@@ -15,19 +15,19 @@ const aliensMap = [
     '10','10','10','10','10','10','10','10','10','10','10',
 ];
 
-const alienSprites = { // Mettre aliens avec appuie et F2
+const alienSprites = { // Changer tous les noms avec dessus F2
     40 : [
-            {x : 6, y : 3, width : 16, height : 16 },
-            {x : 6, y : 25, width : 16, height : 16}
+        { x:6 , y:3  , width:16 , height:16 },
+        { x:6 , y:25 , width:16 , height:16 }
     ],
     20 : [
-            {x : 6, y : 3, width : 16, height : 16 },
-            {x : 6, y : 25, width : 16, height : 16}
+        { x:32 , y:3  , width:22 , height:16 },
+        { x:32 , y:25 , width:22 , height:16 }
     ],
     10 : [
-            {x : 6, y : 3, width : 16, height : 16 },
-            {x : 6, y : 25, width : 16, height : 16}
-    ] 
+        { x:60 , y:25 , width:24 , height:16 },
+        { x:60 , y:3  , width:24 , height:16 }
+    ]
 };
 
 function createAliens(){
@@ -84,6 +84,30 @@ function animateAliens(){
         aliens[i].x += 12 * aliens[i].direction;
         }
     }
+
+    // Vérification si un alien se prend un tir de "player.bullet"
+    if(player.bullet !== null){
+        for(let i = 0; i < aliens.length; i++){
+            if(player.bullet.x > aliens[i].x &&
+                player.bullet.x <= aliens[i].x + aliens[i].width && 
+                player.bullet.y > aliens[i].y &&
+                player.bullet.y <= aliens[i].y + aliens[i].height){
+                    // Collision !
+                    // Augmentation du score du joueur 
+                    player.score += aliens[i].points;
+                    player.bullet = null;
+                    // Augmentation de la vistesse générale des aliens
+                    aliensTimer -= 10;
+                    if(aliensTimer < 75){
+                        aliensTimer = 75;
+                    }
+                    //Suppression de l'alien du tableau 
+                    aliens.splice(i,1);
+                    break;
+            }
+        }
+    }
+
 } // Fin du mouvement des aliens 
 
 function renderAliens(){
