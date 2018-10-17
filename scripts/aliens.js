@@ -2,10 +2,6 @@ const NB_ALIENS_PER_LINE = 11;
 
 ALIEN_SPACE_X = 35;
 ALIEN_SPACE_Y = 28;
-aliensTimer = 1000;
-
-
-let lastAlienMovement = 0; // instant t du dernier déplacement déplacement des aliens
 
 const aliensMap = [
     40,40,40,40,40,40,40,40,40,40,40,
@@ -29,6 +25,11 @@ const alienSprites = { // Changer tous les noms avec dessus F2#
         { x:60 , y:3  , width:24 , height:16 }
     ]
 };
+
+let aliensTimer = 1000; // Rapidité des aliens
+let lastAlienMovement = 0; // instant t du dernier déplacement déplacement des aliens
+let alienExplosions = []; // Tableau qui servira à stocker les sprites d'explosion 
+let alienSoundNb = 1; // Numéro son alien (variera de 1 à 4 en boucle)
 
 function createAliens(){
     const aliens = [];
@@ -57,11 +58,19 @@ function createAliens(){
 }
 
 function animateAliens(){
-    // Parcours du tableau daliens pour mise à jour 
+    // Parcours du tableau d'aliens pour mise à jour 
     
     // Mouvement des aliens de gauche à droite et vers le bas
     if(Date.now() - lastAlienMovement > aliensTimer){
         lastAlienMovement = Date.now(); // Mise à jour de linstant du dernier mouvement du joueur à maintenant 
+
+        /*sounds['invader' + alienSoundNb].play();
+        alienSoundNb ++;
+        if(alienSoundNb > 4){
+            alienSoundNb = 1;
+        }*/
+
+        sounds['invader' + (alienSoundNb++ %4 + 1)].play();
 
         // Récupération du X de lalien le plus à droite (et à gauche)
         let extremeRightAlien = Math.max( ... aliens.map(a => a.x) ) + ALIEN_SPACE_X;
@@ -100,6 +109,9 @@ function animateAliens(){
                 player.bullet.y > aliens[i].y &&
                 player.bullet.y <= aliens[i].y + aliens[i].height){
                     // Collision !
+                    createExplosion(aliens[i]); // Fonction pour l'explosion de l'aliens
+                    // Son
+                    sounds['invader_killed'].play();
                     // Augmentation du score du joueur 
                     player.score += aliens[i].points;
                     player.bullet = null;
@@ -115,10 +127,19 @@ function animateAliens(){
         }
     }
 
-} // Fin du mouvement des aliens 
+    // Suppression des animations d'explosion ayant dépassé les 100ms
+
+    for(let i = 0; i < alienExplosions.length; i++){
+        if(Date.now() - alienExplosions[i].dateCreated > 100){
+            alienExplosions.splice(i, 1);
+            i--;       
+        }
+    }
+
+} // Fin du mouvement des aliens (animateAliens) 
 
 function renderAliens(){
-    for(let i = 0; i < aliens.length; i++){
+    for(let i = 0; i < aliens.length; i++){ // Boucle qui dessine les aliens en eux mêmes
 
         let points = aliens[i].points;
         let spriteIndex = aliens[i].spriteIndex;
@@ -135,6 +156,38 @@ function renderAliens(){
             aliens[i].y,
             alienSprites[points][spriteIndex].width,
             alienSprites[points][spriteIndex].height
+
         );
     }
+
+    // Dessiner l'image de l'explosion
+    for(let i = 0; i< alienExplosions.length; i++){
+        context.drawImage(
+            spritesheet,
+
+            alienExplosions[i].sprite.x,
+            alienExplosions[i].sprite.y,
+            alienExplosions[i].sprite.width,
+            alienExplosions[i].sprite.height,
+
+            alienExplosions[i].x,
+            alienExplosions[i].y,
+            alienExplosions[i].sprite.width,
+            alienExplosions[i].sprite.height,
+        )
+    }
+}
+
+function createExplosion(aliens){ // Fonction qui créé un objet représentant une explosion, à partir d'un alien
+    alienExplosions.push({
+        x : aliens.x,
+        y : aliens.y,
+        sprite : { // Sprite de l'explosion trouver graçe a photoshop
+            x : 88,
+            y : 25,
+            width : 26,
+            height : 16
+        },
+        dateCreated : Date.now()
+    })
 }

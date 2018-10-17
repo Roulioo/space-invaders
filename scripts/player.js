@@ -47,8 +47,10 @@ function animatePlayer(){
                 width : 4,
                 height : 10,
                 color : '#0f0', // green
-                speed : 9
-            }
+                speed : 10
+            };
+
+            sounds['shoot'].play(); // Aller chercher dans le tableau le son 
         }
     }
 

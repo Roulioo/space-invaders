@@ -13,6 +13,6 @@ function renderUI(){
     context.strokeStyle = '#0f0';
     context.moveTo(20, canvas.height - 40);
     context.lineTo(canvas.width - 20, canvas.height - 40);
-    context.stroke();
+    context.stroke();   
 
 }
