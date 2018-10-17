@@ -89,7 +89,6 @@ function animateAliens(){
                 aliens[i].spriteIndex = 0;
             }*/
 
-        aliens[i].x += 12 * aliens[i].direction;
         }
     }
 
