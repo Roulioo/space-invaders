@@ -4,6 +4,7 @@ function createPlayer(){
         y : 450,
         speed : 3,
         lives : 3,
+        score : 0,
         sprite : {
             img : spritesheet,
             offsetX : 88,
@@ -75,8 +76,8 @@ function renderPlayer(){
         player.x, 
         player.y,
         player.sprite.width,
-        player.sprite.height
-        
+        player.sprite.height,
+
     );
 
     // Dessin du shoot joueur 

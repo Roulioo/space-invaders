@@ -8,11 +8,11 @@ aliensTimer = 1000;
 let lastAlienMovement = 0; // instant t du dernier déplacement déplacement des aliens
 
 const aliensMap = [
-    '40','40','40','40','40','40','40','40','40','40','40',
-    '20','20','20','20','20','20','20','20','20','20','20',
-    '20','20','20','20','20','20','20','20','20','20','20',
-    '10','10','10','10','10','10','10','10','10','10','10',
-    '10','10','10','10','10','10','10','10','10','10','10',
+    40,40,40,40,40,40,40,40,40,40,40,
+    20,20,20,20,20,20,20,20,20,20,20,
+    20,20,20,20,20,20,20,20,20,20,20,
+    10,10,10,10,10,10,10,10,10,10,10,
+    10,10,10,10,10,10,10,10,10,10,10,
 ];
 
 const alienSprites = { // Changer tous les noms avec dessus F2#
@@ -42,8 +42,8 @@ function createAliens(){
             line ++;
         }
 
-        aliens.push({
-            x : 12 + i % NB_ALIENS_PER_LINE * ALIEN_SPACE_X, // Gérer espacement chaque aliens
+        aliens.push({ // | permet darrondir à lentier supérieur (Math.round)
+            x : 12 + i % NB_ALIENS_PER_LINE * ALIEN_SPACE_X + (24 - alienWidth) / 2 | 0, // Gérer espacement chaque aliens
             y : 100 + line *  ALIEN_SPACE_Y, 
             width : alienWidth,
             height : alienHeight,
@@ -57,13 +57,13 @@ function createAliens(){
 }
 
 function animateAliens(){
-    // Parcours du tableau d'aliens pour mise à jour 
+    // Parcours du tableau daliens pour mise à jour 
     
     // Mouvement des aliens de gauche à droite et vers le bas
     if(Date.now() - lastAlienMovement > aliensTimer){
-        lastAlienMovement = Date.now(); // Mise à jour de l'instant du dernier mouvement du joueur à maintenant 
+        lastAlienMovement = Date.now(); // Mise à jour de linstant du dernier mouvement du joueur à maintenant 
 
-        // Récupération du X de l'alien le plus à droite (et à gauche)
+        // Récupération du X de lalien le plus à droite (et à gauche)
         let extremeRightAlien = Math.max( ... aliens.map(a => a.x) ) + ALIEN_SPACE_X;
         let extremeLeftAlien = Math.min( ... aliens.map(a => a.x) );
 
@@ -109,7 +109,7 @@ function animateAliens(){
                     if(aliensTimer < 75){
                         aliensTimer = 75;
                     }
-                    //Suppression de l'alien du tableau 
+                    //Suppression de lalien du tableau 
                     aliens.splice(i,1);
                     break;
             }
