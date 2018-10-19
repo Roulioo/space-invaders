@@ -9,6 +9,7 @@ canvas.height = 540;
 let timer = 0;
 let player;
 let aliens;
+
 const sounds = {
     invader1 : document.getElementById('invader1'),
     invader2 : document.getElementById('invader2'),
@@ -21,11 +22,13 @@ const sounds = {
 
 const MODE_PLAYING = 1;
 const MODE_GAME_OVER = 2;
-let game_mode = MODE_GAME_OVER ;
+
+let game_mode = MODE_PLAYING ;
 
 // Chargement de l'image du sprite avant de démarrer le jeu
 
 const spritesheet = new Image();
+
 spritesheet.src = '../img/spritesheet.png';
 spritesheet.onload = function(){ // Fonction éxécutée lorsque le navigateur a fini de charger le PNG
     player = createPlayer();
@@ -87,7 +90,7 @@ function renderGameOver(){
 
         context.fillStyle = '#fff';
         context.font="18px Arial";
-        context.fillText("Press F5 ", canvas.width/2, canvas.height/2+30)
+        context.fillText("Press Echap ", canvas.width/2, canvas.height/2+30)
 
     }else if(game_mode === MODE_PLAYING){
         render();

@@ -26,10 +26,12 @@ const alienSprites = { // Changer tous les noms avec dessus F2#
     ]
 };
 
-let aliensTimer = 1000; // Rapidité des aliens
+let aliensTimer = 1000 ; // Rapidité des aliens
 let lastAlienMovement = 0; // instant t du dernier déplacement déplacement des aliens
-let alienExplosions = []; // Tableau qui servira à stocker les sprites d'explosion 
 let alienSoundNb = 1; // Numéro son alien (variera de 1 à 4 en boucle)
+
+let alienExplosions = []; // Tableau qui servira à stocker les sprites d'explosion 
+let aliensShots = []; // Tableau qui contiendra la liste des éventuels tirs d'aliens
 
 function createAliens(){
     const aliens = [];
@@ -58,8 +60,7 @@ function createAliens(){
 }
 
 function animateAliens(){
-    // Parcours du tableau d'aliens pour mise à jour 
-    
+
     // Mouvement des aliens de gauche à droite et vers le bas
     if(Date.now() - lastAlienMovement > aliensTimer){
         lastAlienMovement = Date.now(); // Mise à jour de linstant du dernier mouvement du joueur à maintenant 
@@ -72,12 +73,29 @@ function animateAliens(){
 
         sounds['invader' + (alienSoundNb++ %4 + 1)].play();
 
+        // Vérification si un des aliens du groupe a atteint le joueur
+        // Pour cela, récupération des coordonnées de l'alien le plus bas dans le groupe
+
+        let extremeDownAlien = Math.max( ... aliens.map(a => a.y) );
+        
+        if(extremeDownAlien + 16 >= player.y){
+            player.lives = 0;
+            sounds['player_death'].play();
+            game_mode = MODE_GAME_OVER;
+        }
+        
+
         // Récupération du X de lalien le plus à droite (et à gauche)
         let extremeRightAlien = Math.max( ... aliens.map(a => a.x) ) + ALIEN_SPACE_X;
         let extremeLeftAlien = Math.min( ... aliens.map(a => a.x) );
 
         // Parcours du tableau des aliens pour mise à jour
         for (let i = 0; i < aliens.length; i ++){
+
+            // On génère les tirs aliens
+            if(Math.random() > 0.99){
+                createAlienShot(aliens[i]);
+            }
 
             if(
                 extremeRightAlien > canvas.width && aliens[i].direction === 1 ||
@@ -128,11 +146,22 @@ function animateAliens(){
     }
 
     // Suppression des animations d'explosion ayant dépassé les 100ms
-
     for(let i = 0; i < alienExplosions.length; i++){
         if(Date.now() - alienExplosions[i].dateCreated > 100){
             alienExplosions.splice(i, 1);
             i--;       
+        }
+    }
+
+    // Gestion des shoots aliens
+    for(let i = 0; i < aliensShots.length; i++){
+
+        aliensShots[i].y += aliensShots[i].speed;
+        
+        // Si un tir de l'alien déborde en bas du canvas on l'enlève
+        if(aliensShots[i].y > canvas.height){
+            aliensShots.splice(i,1);
+            i--;
         }
     }
 
@@ -176,12 +205,18 @@ function renderAliens(){
             alienExplosions[i].sprite.height,
         )
     }
+
+        // Dessin des shots aliens 
+    for(let i = 0; i < aliensShots.length; i++){
+        context.fillStyle = '#fff';
+        context.fillRect(aliensShots[i].x, aliensShots[i].y, aliensShots[i].width, aliensShots[i].height);
+    }
 }
 
-function createExplosion(aliens){ // Fonction qui créé un objet représentant une explosion, à partir d'un alien
+function createExplosion(alien){ // Fonction qui créé un objet représentant une explosion, à partir d'un alien
     alienExplosions.push({
-        x : aliens.x,
-        y : aliens.y,
+        x : alien.x,
+        y : alien.y,
         sprite : { // Sprite de l'explosion trouver graçe a photoshop
             x : 88,
             y : 25,
@@ -189,5 +224,18 @@ function createExplosion(aliens){ // Fonction qui créé un objet représentant 
             height : 16
         },
         dateCreated : Date.now()
-    })
-}
+    });
+};
+
+function createAlienShot(alien){
+    // Dès qu'un alien shoot on emet le son
+    sounds['shoot'].play();
+    // Ajout d'un shot alien dans le tableau correspondant 
+    aliensShots.push({
+        x : alien.x + alien.width/2,
+        y : alien.y + alien.height,
+        width : 4,
+        height : 10, 
+        speed : 5
+    });
+};

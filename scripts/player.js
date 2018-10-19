@@ -54,6 +54,20 @@ function animatePlayer(){
         }
     }
 
+
+    // Si le joueur appuie sur echap
+    if (Keyboard.ECHAP){
+
+    }
+
+    // Si le joueur tue tous les aliens
+    if (renderAliens() == 0/*si plus d'aliens*/){
+        context.textAlign = "center"; // Alligner
+        context.fillStyle = "hsl(" +go_color+ " , 100% ,50%)"; // Couleur clignotter
+        context.font="50px Arial"; // Police
+        context.fillText('YOU WIN', canvas.width/2, canvas.height/2); // Texte
+    }
+        
     // Etat d'avancement du shoot joueur
     if(player.bullet != null){
         player.bullet.y -= player.bullet.speed;
