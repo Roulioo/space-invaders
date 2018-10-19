@@ -30,7 +30,7 @@ let game_mode = MODE_PLAYING ;
 
 const spritesheet = new Image();
 
-spritesheet.src = '../img/spritesheet.png';
+spritesheet.src = 'img/spritesheet.png';
 spritesheet.onload = function(){ // Fonction éxécutée lorsque le navigateur a fini de charger le PNG
     player = createPlayer();
     aliens = createAliens();
