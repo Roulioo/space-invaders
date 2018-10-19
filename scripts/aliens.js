@@ -162,6 +162,38 @@ function animateAliens(){
         if(aliensShots[i].y > canvas.height){
             aliensShots.splice(i,1);
             i--;
+        }else if(
+            aliensShots[i].x > player.x &&
+            aliensShots[i].x + aliensShots[i].width < player.x + player.sprite.width &&
+            aliensShots[i].y + aliensShots[i].height > player.y && 
+            aliensShots[i].y < player.y + player.sprite.height // Pas obligatoire cette ligne
+        ){
+            // Moins une vie
+            player.lives--;
+
+            // Plus de vies ? 
+            if(player.lives === 0){
+                game_mode = MODE_GAME_OVER;
+                break;
+            }
+
+            // Suppression des aliens en cours et du shoot player
+            aliensShots.length = 0; // On vide le tableau
+            player.bullet = null;
+
+            // "Boom !"
+            sounds['player_death'].play();
+
+            // Changement du mode de jeu pour 2 secondes
+            game_mode = MODE_PLAYER_DEAD;
+            setTimeout(() => {
+
+                // Replacement du joueur à sa position initiale
+                player.x = 100;
+
+                game_mode = MODE_PLAYING;
+            }, 2000); // 2000 ms soit 2 s
+
         }
     }
 

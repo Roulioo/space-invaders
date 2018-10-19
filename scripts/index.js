@@ -22,6 +22,7 @@ const sounds = {
 
 const MODE_PLAYING = 1;
 const MODE_GAME_OVER = 2;
+const MODE_PLAYER_DEAD = 3;
 
 let game_mode = MODE_PLAYING ;
 
@@ -41,11 +42,13 @@ spritesheet.onload = function(){ // Fonction éxécutée lorsque le navigateur a
 // Fonction pour les actions
 function update() {
     switch(game_mode){
-        case MODE_PLAYING :
+        case MODE_PLAYING : // Quand on joue
             animatePlayer(); //Fonction qui gère l'animation du joueur
             animateAliens(); // Fonction qui gère l'animation de l'alien
             break;
         }
+
+    
 }
 
 // Fonction pour les dessins
@@ -54,6 +57,7 @@ function render() {
 
     switch(game_mode){
         case MODE_PLAYING :
+        case MODE_PLAYER_DEAD :
             renderPlayer(); // Fonction qui gèrera le dessin du joueur
             renderAliens(); // Fonction qui gère le dessin de l'alien
             break;
