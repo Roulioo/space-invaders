@@ -2,6 +2,12 @@
 
 Space invaders in web page.
 
+# Technologies
+
+- HTML
+- CSS
+- Javascript
+
 # How to test
 
 1. Go to current folder of project in terminal
